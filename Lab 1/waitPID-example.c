@@ -26,6 +26,7 @@ int main()
     {
         printf("\nMy PID is %d", getpid());
         printf("\nMy parent PID is %d", getppid());
+        sleep(1);
     }
     
     
