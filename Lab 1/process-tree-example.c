@@ -10,4 +10,5 @@ int main()
     fork();
     printf("\nMy PID is %d\n", getpid());
     printf("\nMy parent PID is %d\n", getppid());
+    wait(0);
 }
