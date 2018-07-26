@@ -18,7 +18,7 @@ int main()
     if (p > 0) {
         // waitpid(p,0,0);
         printf("\nI am a parent of PID %d",p);
-        sleep(3);
+        sleep(7);
         _exit(0);
     }
     
