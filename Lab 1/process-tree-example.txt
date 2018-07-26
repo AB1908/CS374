@@ -1,32 +1,31 @@
-
-My PID is 12481
-
-My parent PID is 12476
-
-My PID is 12477
-
-My parent PID is 12474
-
-My PID is 12480
-
-My parent PID is 12478
-
-My PID is 12476
-
-My parent PID is 12474
-
-My PID is 12474
+My PID is 12462
 
 My parent PID is 10583
 
-My PID is 12478
+My PID is 12463
 
-My parent PID is 12475
 
-My PID is 12479
+My PID is 12465
 
-My parent PID is 12475
+My parent PID is 12462
 
-My PID is 12475
+My parent PID is 12463
+My PID is 12467
 
-My parent PID is 12474
+My parent PID is 12463
+
+My PID is 12464
+
+My parent PID is 12462
+
+My PID is 12468
+
+My parent PID is 12465
+
+
+My PID is 12466
+
+My PID is 12469
+My parent PID is 12462
+
+My parent PID is 12464
