@@ -4,6 +4,7 @@
 
 - Processes
 - `fork()` System Call
+- `wait()` System Call
 
 ## Lab 2
 
