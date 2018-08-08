@@ -16,9 +16,9 @@
 
 ## Assignment
 
-1. Write a C program to verify the the address spaces of the child and parent process are **not** the same.
+1. Show that the address spaces of the child and parent process are **not** the same.
 
-2. Write a C program to create a process tree resembling a skewed binary tree, i.e. create the following process tree:
+2. Create a process tree resembling a skewed binary tree, i.e. create the following process tree:
 P<sub>1</sub> &rarr; P<sub>2</sub> &rarr; P<sub>3</sub> &rarr; P<sub>4</sub>..... &rarr; P<sub>n</sub> where &rarr; represents a child - parent relation. 
 
     Note: Be careful to ensure there are no orphaned processes.
