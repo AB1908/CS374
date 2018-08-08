@@ -18,5 +18,17 @@
 
 1. Write a C program to verify the the address spaces of the child and parent process are **not** the same.
 
+    ```Shell
+    3984 is the PID of the current process
+    Inside the child process, the variable i has been incremented
+
+    3984 is the PID of the current process
+    Child created successfully
+    Child terminated successfully
+    After termination of the child process, the value of i is 0
+    ```
+
 2. Write a C program to create a process tree resembling a skewed binary tree, i.e. create the following process tree:
-P<sub>1</sub>&rarr;P<sub>2</sub>&rarr;P<sub>3</sub>&rarr;P<sub>4</sub>.....&rarr;P<sub>n</sub> where &rarr; represents a child - parent relation.
+P<sub>1</sub>&rarr;P<sub>2</sub>&rarr;P<sub>3</sub>&rarr;P<sub>4</sub>.....&rarr;P<sub>n</sub> where &rarr; represents a child - parent relation. 
+
+    Note: Be careful to ensure there are no orphaned processes.
