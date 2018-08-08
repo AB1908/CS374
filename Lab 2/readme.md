@@ -23,4 +23,8 @@ P<sub>1</sub> &rarr; P<sub>2</sub> &rarr; P<sub>3</sub> &rarr; P<sub>4</sub>....
 
     Note: Be careful to ensure there are no orphaned processes.
 
-See [solutions](solution.md) for answers.
+See [solutions](solutions.md) for answers.
+
+## OSTEP Practice Questions
+
+See [OSTEP](./OSTEP/readme.md).
