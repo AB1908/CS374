@@ -13,19 +13,19 @@ int main()
 
     if (fork_status > 0)
     {
-        printf("\nChild created successfully");
+        printf("\nChild created successfully.");
         wait(0);
-        printf("\nChild terminated successfully");
-        printf("\nAfter termination of the child process, the value of i is %d", i);
+        printf("\nChild terminated successfully.");
+        printf("\nAfter termination of the child process, the value of i is %d.", i);
     }
     else if (fork_status == 0)
     {
-        printf("\nInside the child process, the variable i has been incremented\n");
+        printf("\nInside the child process, the variable i has been incremented.\n");
         i++;
     }
     else
     {
-        printf("\nChild creation unsuccessful");
+        printf("\nChild creation unsuccessful.");
     }
     return 0;
 }
