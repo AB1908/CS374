@@ -9,7 +9,28 @@
     - Now that a parent process has created the necessary number of children, we need the child process to call `fork()` until it reaches the required degree `n`. We simply add a condition for this after the `while` loop. Since we want a tree of height `h`, we must repeat this process `h` times using a looping method of choice.
 
     Implementation: [`full-process-tree.c`](full-process-tree.c)   
-    Output: [`tree.out`](tree.out)
+    Binary executable: [`tree.out`](tree.out)
+
+    Input:
+    ```
+    Enter a degree for the process tree:2
+
+    Enter a height for the process tree:2
+    ```
+    Output:
+    ```
+    Process 7690 has created a child 7691
+
+    Process 7691 has created a child 7692
+
+    Process 7691 has created a child 7693
+
+    Process 7690 has created a child 7694
+
+    Process 7694 has created a child 7695
+
+    Process 7694 has created a child 7696
+    ```
 
 2. The second question required that we call the previously created `tree.out` using `exec()` calls (non-environment calls). The implementation had an interesting bug which @sonicaks was able to fix.
 
