@@ -1,3 +1,5 @@
+// Call tree.out using exec family of system calls. Other calls have been commented out.
+
 #include <sys/types.h>
 #include <unistd.h>
 #include <stdio.h>
