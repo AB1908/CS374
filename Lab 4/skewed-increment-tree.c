@@ -31,11 +31,13 @@ int main()
         }
         else if(fork_status == 0)
         {
+            sleep(1);
+            printf("\n%d has created a child process %d.\n", (int)getppid(), (int)getpid());
             int incr;
             read(fd[0], &incr, sizeof(int));
             incr++;
+            printf("\nThe current incremented value is %d\n", incr);
             write(fd[1], &incr, sizeof(int));
-            printf("\n%d has created a child process %d.\n", (int)getppid(), (int)getpid());
             fork_status = fork();
         }
         else
