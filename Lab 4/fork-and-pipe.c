@@ -13,7 +13,7 @@ int main()
     int pipe_status = pipe(fd);
     int fork_status = 1;
 
-    for(i = 0; i < 3; i++)
+    for(i = 1; i < 3; i++)
     {
         if(fork_status < 0)
         {
