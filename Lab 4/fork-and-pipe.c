@@ -9,20 +9,22 @@ int child(int child_count, int *fd)
 {
     if(child_count == 0)
     {
-        close(fd[0]);
-        close(fd[1]);
-        dup2(1,fd[1]);
-        char *args[] = {"/bin/ls", "-l", "\0"};
-        int exec_status = execv("/bin/ls", args);
+        // close(fd[0]);
+        // close(fd[1]);
+        // dup2(1,fd[1]);
+        // char args[] = {"ls", "\0"};
+        int exec_status = execl("ls", "\0");
+        // printf("%d", exec_status);
     }
     else
     {
+        // printf("Hello Darkness my old friend");
         char buf[100];
         close(fd[1]);
         int rd = read(fd[0], buf, 100);
         // close(fd[0]);
         // dup2(fd[1],1);
-        char *args[] = {"/bin/wc", buf, "\0"};
+        char *args[] = {"wc", buf, "\0"};
         int exec_status = execv("/bin/wc", args);
     }
     return 0;
@@ -50,7 +52,7 @@ int main()
         {
             fork_status = fork();
             child_count = i;
-            wait(0);
+            // wait(0);
         }
     }
 
@@ -58,9 +60,9 @@ int main()
     {
         int proc_status = child(child_count, fd);
     }
-    // else
-    // {
-    //     wait(0);
-    // }
+    else
+    {
+        wait(0);
+    }
     return 0;
 }
