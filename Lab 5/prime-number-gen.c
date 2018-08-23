@@ -21,7 +21,6 @@ int usr_sqrt(int n)
     return i;
 }
 
-// Function to print the array
 void print_array(int *arr, int length)
 {
     int j;
@@ -32,6 +31,7 @@ void print_array(int *arr, int length)
     printf("\n");
 }
 
+// Since realloc requires a size to reallocate to before the call, the size is calculated beforehand in this function. This could easily have been implemented more elegantly inside the sieve method itself.
 int size_reduce(int *arr, int n, int child_no)
 {
     int i;
@@ -46,9 +46,10 @@ int size_reduce(int *arr, int n, int child_no)
     return size;
 }
 
+// This method filters out the non-prime numbers and reallocs the array to the smaller size required.
 int sieve(int *arr, int original_len, int child_no)
 {
-    int i, j = 0;
+    int i, final_length = 0;
 
     int size = size_reduce(arr, original_len, child_no);
     
@@ -56,13 +57,21 @@ int sieve(int *arr, int original_len, int child_no)
     {
         if((arr[i] % child_no != 0) || (arr[i] == child_no))
         {
-            arr[j++] = arr[i];
+            arr[final_length++] = arr[i];
         }
     }
 
     arr = (int*)realloc(arr, size*sizeof(int));
         
     return size;
+}
+
+int filter_print(int *arr, int n, int child_no)
+{
+    print_array(arr, n);            // Print the array
+    n = sieve(arr, n, child_no+1);  // before and after
+    print_array(arr, n);            // filtering
+    return n;
 }
 
 int main()
@@ -73,21 +82,22 @@ int main()
     printf("\nEnter a perfect square:");
     scanf("%d", &n);
 
-    int *arr = (int*)malloc(sizeof(int)*n);
+    int *arr = (int*)malloc(sizeof(int)*n); // Arrays created on the stack cannot be reallocated
     int i, j;
     int children = usr_sqrt(n);
     int fork_status = 0;
 
-    for(i = 1; i <= n; i++)
+    for(i = 1; i <= n; i++) // Initialise the original array
     {
         arr[i-1] = i;
     }
 
+    // Since the implementation starts with a read as below, the initial array is written to a pipe. A better implementation could be possible.
     int pipe_status = pipe(fd);
     int wr = write(fd[1], &arr, sizeof(int)*n);
     close(fd[1]);
 
-    for(i = 1; i <= children; i++)
+    for(i = 1; i < children; i++)
     {
         if(fork_status > 0)
         {
@@ -97,34 +107,32 @@ int main()
         {
             printf("\nChild creation unsuccessful\n");
         }
-        else if ((fork_status == 0) && (i == children))
-        {
-            int rd = read(fd[0], &arr, sizeof(arr));
-            print_array(arr, n);
-        }
-        else // 
+        else // Child block
         {
             int rd = read(fd[0], &arr, sizeof(arr));
             
-            print_array(arr, n);
-            n = sieve(arr, n, i+1);
-            print_array(arr, n);
+            printf("\nThe process %d was spawned by parent process %d\n", (int)getpid(), (int)getppid());
+            n = filter_print(arr, n, i);
             
-            close(fd[0]);
-            pipe_status = pipe(fd);
-            fork_status = fork();
-            if(fork_status > 0)
+            close(fd[0]);                               // Close the existing pipe and then
+            pipe_status = pipe(fd);                     // Create a new pipe
+            fork_status = fork();                       // which is now shared with a child
+            if((fork_status > 0) && (i != children))    // and write to the pipe if parent and not the final child
             {
-                printf("\nThe process %d was spawned by parent process %d\n", (int)getpid(), (int)getppid());
-                if(i != children)
-                {
-                    write(fd[1], &arr, sizeof(arr));
-                    close(fd[1]);
-                    wait(0);
-                }
+                write(fd[1], &arr, sizeof(arr));
+                close(fd[1]);
+                wait(0);
             }
-        }   
+        }
     }
+        
+    if ((fork_status == 0) && (i == children)) // The final child process needs to read from the pipe, filter and printthe array
+    {
+        int rd = read(fd[0], &arr, sizeof(arr));
+        close(fd[0]);
+        printf("\nThe process %d was spawned by parent process %d\n", (int)getpid(), (int)getppid());            
+        n = filter_print(arr, n, i);
+    }   
 
     free(arr);
     
