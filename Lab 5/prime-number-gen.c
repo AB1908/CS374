@@ -1,4 +1,4 @@
-// Sieve of Eratosthenes
+/* Sieve of Eratosthenes*/
 
 #include <unistd.h>
 #include <sys/types.h>
@@ -6,20 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-// User defined square root function
-int usr_sqrt(int n)
-{
-    int i;
-    for(i = 1; i < n; i++)
-    {
-        if(i*i == n)
-        {
-            break;
-        }
-    }
-    return i;
-}
+#include <math.h>
 
 void print_array(int *arr, int length)
 {
@@ -31,28 +18,11 @@ void print_array(int *arr, int length)
     printf("\n");
 }
 
-// Since realloc requires a size to reallocate to before the call, the size is calculated beforehand in this function. This could easily have been implemented more elegantly inside the sieve method itself.
-int size_reduce(int *arr, int n, int child_no)
-{
-    int i;
-    int size = n;
-    for(i = 0; i < n; i++)
-    {
-        if((arr[i] % child_no == 0) && (arr[i] != child_no))
-        {
-            size--;
-        }
-    }
-    return size;
-}
-
 // This method filters out the non-prime numbers and reallocs the array to the smaller size required.
 int sieve(int *arr, int original_len, int child_no)
 {
     int i, final_length = 0;
 
-    int size = size_reduce(arr, original_len, child_no);
-    
     for(i = 0; i < original_len; i++)
     {
         if((arr[i] % child_no != 0) || (arr[i] == child_no))
@@ -61,16 +31,17 @@ int sieve(int *arr, int original_len, int child_no)
         }
     }
 
-    arr = (int*)realloc(arr, size*sizeof(int));
+    arr = (int*)realloc(arr, (final_length)*sizeof(int));
         
-    return size;
+    return final_length;
 }
 
+// This method prints the array before and after filtering
 int filter_print(int *arr, int n, int child_no)
 {
-    print_array(arr, n);            // Print the array
-    n = sieve(arr, n, child_no+1);  // before and after
-    print_array(arr, n);            // filtering
+    print_array(arr, n);
+    n = sieve(arr, n, child_no+1);
+    print_array(arr, n);
     return n;
 }
 
@@ -84,10 +55,11 @@ int main()
 
     int *arr = (int*)malloc(sizeof(int)*n); // Arrays created on the stack cannot be reallocated
     int i, j;
-    int children = usr_sqrt(n);
+    int children = (int)sqrt(n);
     int fork_status = 0;
 
-    for(i = 1; i <= n; i++) // Initialise the original array
+    // Initialise the original array
+    for(i = 1; i <= n; i++)
     {
         arr[i-1] = i;
     }
@@ -114,10 +86,11 @@ int main()
             printf("\nThe process %d was spawned by parent process %d\n", (int)getpid(), (int)getppid());
             n = filter_print(arr, n, i);
             
-            close(fd[0]);                               // Close the existing pipe and then
-            pipe_status = pipe(fd);                     // Create a new pipe
-            fork_status = fork();                       // which is now shared with a child
-            if((fork_status > 0) && (i != children))    // and write to the pipe if parent and not the final child
+            // Create a new pipe which is accessible from the child which the (then) parent writes to for the child to read in the next iteration
+            close(fd[0]);
+            pipe_status = pipe(fd);          
+            fork_status = fork();
+            if(fork_status > 0)
             {
                 write(fd[1], &arr, sizeof(arr));
                 close(fd[1]);
@@ -126,7 +99,8 @@ int main()
         }
     }
         
-    if ((fork_status == 0) && (i == children)) // The final child process needs to read from the pipe, filter and printthe array
+    // The final child process needs to read from the pipe, filter and print the array
+    if ((fork_status == 0) && (i == children))
     {
         int rd = read(fd[0], &arr, sizeof(arr));
         close(fd[0]);
