@@ -5,6 +5,7 @@
 #include <wait.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 // User defined square root function
 int usr_sqrt(int n)
@@ -21,11 +22,13 @@ int usr_sqrt(int n)
 }
 
 // Function to print the array
-void print_array(int *arr, int n)
+void print_array(int *arr, int length)
 {
     printf("\n");
     int j;
-    for(j = 0; j < n; j++)
+    // printf("%d %d\n", sizeof(arr), sizeof(int));
+    // length = sizeof(arr);
+    for(j = 0; j < length; j++)
     printf("%d ", arr[j]);
     printf("\n");
 }
@@ -44,25 +47,30 @@ int size_reduce(int *arr, int n, int child_no)
     return size;
 }
 
-int* sieve(int *arr, int n, int child_no)
+int sieve(int *arr, int original_len, int child_no)
 {
     // reallo
     int i, j = 0;
-    int size = size_reduce(arr,n, child_no);
+    int size = size_reduce(arr, original_len, child_no);
     int divisors;
-    // int newarr[size];
-    // int *newarr = malloc(sizeof(int)*size);
-    int *newarr = arr;
-    *arr = realloc(arr, size*sizeof(int));
-    for(i = 0; i < n; i++)
+    // int newarr[];
+    int *newarr = (int*)malloc(sizeof(int)*original_len);
+    newarr = (int*)memcpy(newarr, arr, sizeof(int)*original_len);
+    // int *newarr = arr;
+    // printf("\n%d\n", size);
+
+    arr = (int*)realloc(arr, size*sizeof(int));
+    for(i = 0; i < original_len; i++)
     {
         if((arr[i] % child_no == 0) && (arr[i] != child_no))
         {
             arr[j++] = newarr[i];
         }
     }
-    
-    return newarr;
+    // int newarr[size];
+    free(newarr);
+    // return arr;
+    return size;
 }
 
 int main()
@@ -73,7 +81,7 @@ int main()
     printf("\nEnter a perfect square:");
     scanf("%d", &n);
 
-    int arr[n];
+    int *arr = (int*)malloc(sizeof(int)*n);
     int i, j;
     int children = usr_sqrt(n);
     int fork_status = 0;
@@ -82,8 +90,12 @@ int main()
     {
         arr[i-1] = i;
     }
+
+    // printf("\n%d", sizeof(int*));
+
+    // print_array(arr, n);
     int pipe_status = pipe(fd);
-    int wr = write(fd[1], &arr, sizeof(arr));
+    int wr = write(fd[1], &arr, sizeof(int)*n);
     close(fd[1]);
 
     for(i = 1; i <= children; i++)
@@ -102,14 +114,14 @@ int main()
             int rd = read(fd[0], &arr, sizeof(arr));
             print_array(arr, n);
         }
-        else //if(i != children)
+        else // 
         {
             int rd = read(fd[0], &arr, sizeof(arr));
             
-            print_array(arr, n);
-
-            int *arr = sieve(arr, n, i); 
-
+            print_array(arr, sizeof(arr)/sizeof(int));
+            n = sieve(arr, sizeof(arr)/sizeof(int), i+1);
+            print_array(arr, sizeof(arr)/sizeof(int));
+            
             close(fd[0]);
             pipe_status = pipe(fd);
             fork_status = fork();
@@ -118,9 +130,9 @@ int main()
                 printf("\nThe process %d was spawned by parent process %d\n", (int)getpid(), (int)getppid());
                 if(i != children)
                 {
-                write(fd[1], &arr, sizeof(arr));
-                close(fd[1]);
-                wait(0);
+                    write(fd[1], &arr, sizeof(arr));
+                    close(fd[1]);
+                    wait(0);
                 }
             }
         }   
