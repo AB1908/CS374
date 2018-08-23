@@ -24,12 +24,11 @@ int usr_sqrt(int n)
 // Function to print the array
 void print_array(int *arr, int length)
 {
-    printf("\n");
     int j;
-    // printf("%d %d\n", sizeof(arr), sizeof(int));
-    // length = sizeof(arr);
+    
+    printf("\n");
     for(j = 0; j < length; j++)
-    printf("%d ", arr[j]);
+        printf("%d ", arr[j]);
     printf("\n");
 }
 
@@ -49,27 +48,23 @@ int size_reduce(int *arr, int n, int child_no)
 
 int sieve(int *arr, int original_len, int child_no)
 {
-    // reallo
     int i, j = 0;
+
     int size = size_reduce(arr, original_len, child_no);
-    int divisors;
-    // int newarr[];
     int *newarr = (int*)malloc(sizeof(int)*original_len);
     newarr = (int*)memcpy(newarr, arr, sizeof(int)*original_len);
-    // int *newarr = arr;
-    // printf("\n%d\n", size);
-
     arr = (int*)realloc(arr, size*sizeof(int));
+
     for(i = 0; i < original_len; i++)
     {
-        if((arr[i] % child_no == 0) && (arr[i] != child_no))
+        if((arr[i] % child_no != 0) || (arr[i] == child_no))
         {
-            arr[j++] = newarr[i];
+            arr[j++] = arr[i];
         }
     }
-    // int newarr[size];
+
     free(newarr);
-    // return arr;
+    
     return size;
 }
 
@@ -91,9 +86,6 @@ int main()
         arr[i-1] = i;
     }
 
-    // printf("\n%d", sizeof(int*));
-
-    // print_array(arr, n);
     int pipe_status = pipe(fd);
     int wr = write(fd[1], &arr, sizeof(int)*n);
     close(fd[1]);
@@ -102,7 +94,6 @@ int main()
     {
         if(fork_status > 0)
         {
-            // wait(0);
             break;
         }
         else if(fork_status == -1)
@@ -118,9 +109,9 @@ int main()
         {
             int rd = read(fd[0], &arr, sizeof(arr));
             
-            print_array(arr, sizeof(arr)/sizeof(int));
-            n = sieve(arr, sizeof(arr)/sizeof(int), i+1);
-            print_array(arr, sizeof(arr)/sizeof(int));
+            print_array(arr, n);
+            n = sieve(arr, n, i+1);
+            print_array(arr, n);
             
             close(fd[0]);
             pipe_status = pipe(fd);
@@ -137,4 +128,8 @@ int main()
             }
         }   
     }
+
+    free(arr);
+    
+    return 0;
 }
