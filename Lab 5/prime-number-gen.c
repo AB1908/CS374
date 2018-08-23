@@ -51,10 +51,7 @@ int sieve(int *arr, int original_len, int child_no)
     int i, j = 0;
 
     int size = size_reduce(arr, original_len, child_no);
-    int *newarr = (int*)malloc(sizeof(int)*original_len);
-    newarr = (int*)memcpy(newarr, arr, sizeof(int)*original_len);
-    arr = (int*)realloc(arr, size*sizeof(int));
-
+    
     for(i = 0; i < original_len; i++)
     {
         if((arr[i] % child_no != 0) || (arr[i] == child_no))
@@ -63,8 +60,8 @@ int sieve(int *arr, int original_len, int child_no)
         }
     }
 
-    free(newarr);
-    
+    arr = (int*)realloc(arr, size*sizeof(int));
+        
     return size;
 }
 
