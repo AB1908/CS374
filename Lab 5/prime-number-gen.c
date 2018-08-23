@@ -51,9 +51,9 @@ int* sieve(int *arr, int n, int child_no)
     int size = size_reduce(arr,n, child_no);
     int divisors;
     // int newarr[size];
-    int *newarr = malloc(sizeof(int)*size);
-    // int newarr = arr;
-    // *arr = reallocarray(arr, size, sizeof(int));
+    // int *newarr = malloc(sizeof(int)*size);
+    int *newarr = arr;
+    *arr = realloc(arr, size*sizeof(int));
     for(i = 0; i < n; i++)
     {
         if((arr[i] % child_no == 0) && (arr[i] != child_no))
