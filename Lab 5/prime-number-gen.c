@@ -104,6 +104,8 @@ int main()
             fork_status = fork();
             if(fork_status > 0)
             {
+                printf("\nThe process %d was spawned by parent process %d\n", (int)getpid(), (int)getppid());
+                print_array(arr, arr_size);
                 close(fd[0]);                
                 write(fd[1], &arr, sizeof(arr));
                 close(fd[1]);
