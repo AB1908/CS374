@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
-#define pfht printf("Hello there!")
+
 int main()
 {
 	char buf[100];
@@ -26,11 +26,14 @@ int main()
 		
 		pipe(pipe2_fd);
 		fork_status = fork();
+		
 		if (fork_status == 0) {
 			close(pipe2_fd[1]);
-				read(pipe2_fd[0], readbuf, 100);
-				printf("\n%s\n", readbuf);	
+			
+			read(pipe2_fd[0], readbuf, 100);
+			printf("\n%s\n", readbuf);	
 			close(pipe2_fd[0]);
+			
 			return 0;
 		}
 
@@ -40,17 +43,20 @@ int main()
  
 		close(pipe1_fd[1]);
 
-			read(pipe1_fd[0], readbuf, 100);
-			printf("\n%s\n", readbuf);
-
+		read(pipe1_fd[0], readbuf, 100);
+		printf("\n%s\n", readbuf);
 		close(pipe1_fd[0]);
+
 		return 0;
 	}
+	
 	char *bufcopy;
 	char *token;
 	int size;
+	
 	bufcopy = strdup(buf);
 	token = strtok(bufcopy, " ");
+	
 	while (token) {
 
 		int caseno = (int)strtol(token, &token, 10);
