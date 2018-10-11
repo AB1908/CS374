@@ -3,12 +3,16 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+/* Struct to contain critical data that is global to all threads
+*/
 struct critical_data {
 	int turn;
 	int flag[2];
 	int balance;
 };
 
+/* Struct to contain data that is local to a thread.
+*/
 struct thread_data {
 	pthread_t tid;
 	int thread_num;
